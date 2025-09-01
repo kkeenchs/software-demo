@@ -16,4 +16,20 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/:username", async (req, res) => {
+    const { username } = req.params;
+    try {
+        const query = `
+        SELECT *
+        FROM users u
+        WHERE u.name = $1
+        `;
+        const { rows } = await pool.query(query, [username]);
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 export default router;
